@@ -35,12 +35,11 @@ The fields in the resulting table are: customer_id, change_date, event.
 Sort the results in ascending order by customer_id, then by change_date.
 
 # Key points
-1. Basic transition rules have been updated to include an additional case: 'Non-member','Non-member','Non-member' (these cases exist in the data).
-2. Use CTE for transition rules mapping
-3. Use ROW_NUMBER() to sequence periods
-4. Handle first/last statuses with COALESCE and FULL JOIN.
-    A FULL JOIN is needed for two extreme cases.
-    After FULL JOIN (st1.rnk = st2.rnk + 1) for example 115:
+
+1. Basic transition rules have been updated to include an additional case: 'Non-member', 'Non-member', 'Non-member' (these cases exist in the data).
+2. Use CTE for transition rules mapping.
+3. Use ROW_NUMBER() to sequence periods.
+4. Handle first/last statuses with COALESCE and FULL JOIN. A FULL JOIN is needed for two extreme cases. After FULL JOIN (st1.rnk = st2.rnk + 1) for example 115:
 
 | Next Period        | Current Period     | Represents        |
 |--------------------|--------------------|-------------------|
@@ -50,18 +49,19 @@ Sort the results in ascending order by customer_id, then by change_date.
 | NULL               | rnk=4 (Paid)       | Last record!      |
 | rnk=1 (Free)       | NULL               | First record!     |
 
-    Why NULL rows are needed:
-    I. st1 = NULL, st2 = last record → transition to Non-member
-    st2.membership_end_date = 2020-10-01
-    st2.status = 'Paid'
-    st1.status = NULL → COALESCE(NULL, 'Non-member') = 'Non-member'
-    Rule: 'Paid' → 'Non-member' = 'Cancel'
-    
-    II. st2 = NULL, st1 = first record → start of history
-    st1.membership_start_date = 2020-01-01
-    st1.status = 'Free'
-    st2.status = NULL → COALESCE(NULL, 'Non-member') = 'Non-member'
-    Rule: 'Non-member' → 'Free' = 'WarmStart'
+Why NULL rows are needed:
+**I. st1 = NULL, st2 = last record** → transition to Non-member  
+`st2.membership_end_date = 2020-10-01`  
+`st2.status = 'Paid'`  
+`st1.status = NULL` → `COALESCE(NULL, 'Non-member') = 'Non-member'`  
+Rule: `'Paid' → 'Non-member' = 'Cancel'`
+
+**II. st2 = NULL, st1 = first record** → start of history  
+`st1.membership_start_date = 2020-01-01`  
+`st1.status = 'Free'`  
+`st2.status = NULL` → `COALESCE(NULL, 'Non-member') = 'Non-member'`  
+Rule: `'Non-member' → 'Free' = 'WarmStart'`
+
 5. COALESCE treats NULL as 'Non-member' for edge cases. WHERE excludes 'Non-member'→'Non-member' events since they represent no actual status change.
 
 # My Solution
