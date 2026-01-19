@@ -38,12 +38,10 @@ Sort the results in ascending order by customer_id, then by change_date.
 
 
 1. Basic transition rules have been updated to include an additional case: 'Non-member', 'Non-member', 'Non-member' (these cases exist in the data).
-
 2. Use CTE for transition rules mapping.
-
 3. Use ROW_NUMBER() to sequence periods.
-
-4. Handle first/last statuses with COALESCE and FULL JOIN. A FULL JOIN is needed for two extreme cases. After FULL JOIN (st1.rnk = st2.rnk + 1) for example 115:
+4. Handle first/last statuses with COALESCE and FULL JOIN. A FULL JOIN is needed for two extreme cases.
+   After FULL JOIN (st1.rnk = st2.rnk + 1) for example 115:
 
 | Next Period        | Current Period     | Represents        |
 |--------------------|--------------------|-------------------|
