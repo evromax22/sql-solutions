@@ -36,7 +36,6 @@ Sort the results in ascending order by customer_id, then by change_date.
 
 # Key points
 
-
 1. Basic transition rules have been updated to include an additional case: 'Non-member', 'Non-member', 'Non-member' (these cases exist in the data).
 2. Use CTE for transition rules mapping.
 3. Use ROW_NUMBER() to sequence periods.
@@ -66,7 +65,6 @@ Rule: `'Paid' → 'Non-member' = 'Cancel'`
 Rule: `'Non-member' → 'Free' = 'WarmStart'`
 
 5. COALESCE treats NULL as 'Non-member' for edge cases. WHERE excludes 'Non-member'→'Non-member' events since they represent no actual status change.
-
 
 # My Solution
 
