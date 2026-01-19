@@ -1,3 +1,12 @@
+# [Multiply](https://solvit.space/coding/2997)
+
+# Description 
+This code does not execute properly. Try to figure out why.
+
+# My Solution
+
+```sql
+
 with transitions as (
     SELECT 'Free' status_from ,'Paid' status_to, 'Convert' event
     union all 
@@ -34,3 +43,4 @@ from(
         coalesce(st2.membership_status, 'Non-member') = transitions.status_from)
 WHERE event != 'Non-member'
 order by 1,2
+```
